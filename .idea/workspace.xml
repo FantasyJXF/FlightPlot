@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="269af278-dbed-4614-b9d5-a0f7c8961784" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -336,7 +335,7 @@
       <option name="presentableId" value="Default" />
       <updated>1511679129064</updated>
       <workItem from="1511679130551" duration="895000" />
-      <workItem from="1511746839982" duration="5339000" />
+      <workItem from="1511746839982" duration="5417000" />
     </task>
     <task id="LOCAL-00001" summary="20171127">
       <created>1511751730656</created>
@@ -352,15 +351,21 @@
       <option name="project" value="LOCAL" />
       <updated>1511751987021</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="remove unrelated folder">
+      <created>1511752256453</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1511752256453</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6234000" />
+    <option name="totallyTimeSpent" value="6312000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="1301" height="772" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -399,7 +404,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="20171127" />
-    <option name="LAST_COMMIT_MESSAGE" value="20171127" />
+    <MESSAGE value="remove unrelated folder" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove unrelated folder" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
