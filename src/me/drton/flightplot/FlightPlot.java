@@ -321,6 +321,7 @@ public class FlightPlot {
     public static void main(String[] args)
             throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException,
             IllegalAccessException {
+            System.out.println("JDUAV is awesome");
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
