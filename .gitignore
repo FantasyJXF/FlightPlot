@@ -1,8 +1,0 @@
-*.class
-out
-.idea/
-/bin
-/.settings
-/.classpath
-/.project
-*.iws
