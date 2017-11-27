@@ -92,7 +92,7 @@ public class PX4LogMessageDescription {
             } else {
                 throw new RuntimeException("Invalid format char in message " + name + ": " + f);
             }
-            data.add(v);
+            data.add(v);// 放数据
         }
         return new PX4LogMessage(this, data);
     }

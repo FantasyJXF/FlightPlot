@@ -39,6 +39,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -96,7 +97,7 @@ public class FlightPlot {
     private JButton logInfoButton;
     private JCheckBox markerCheckBox;
     private JButton savePresetButton;
-    private JRadioButtonMenuItem[] timeModeItems;
+    private JRadioButtonMenuItem[] timeModeItems; //单选按钮菜单项的实现
     private LogReader logReader = null;
     private XYSeriesCollection dataset;
     private JFreeChart chart;
@@ -134,7 +135,7 @@ public class FlightPlot {
         plotExportDialog = new PlotExportDialog(this);
 
         preferences = Preferences.userRoot().node(appName);
-        mainFrame = new JFrame(appNameAndVersion);
+        mainFrame = new JFrame(appNameAndVersion); // Swing UI组件，扩展java.awt.Frame的外部窗体
         mainFrame.setContentPane(mainPanel);
         mainFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -144,7 +145,7 @@ public class FlightPlot {
                 onQuit();
             }
         });
-        mainFrame.setDropTarget(new DropTarget() {
+        mainFrame.setDropTarget(new DropTarget() { // 文件拖拽
             public synchronized void drop(DropTargetDropEvent evt) {
                 try {
                     evt.acceptDrop(DnDConstants.ACTION_COPY);
@@ -159,9 +160,9 @@ public class FlightPlot {
             }
         });
 
-        createMenuBar();
-        java.util.List<String> processors = new ArrayList<String>(processorsTypesList.getProcessorsList());
-        Collections.sort(processors);
+        createMenuBar(); // 创建菜单栏
+        java.util.List<String> processors = new ArrayList<String>(processorsTypesList.getProcessorsList()); // List是有序数据集
+        Collections.sort(processors); // collection是一个包装类。它包含有各种有关集合操作的静态多态方法
         addProcessorDialog = new AddProcessorDialog(processors.toArray(new String[processors.size()]));
         addProcessorDialog.pack();
         fieldsListDialog = new FieldsListDialog(new Runnable() {
@@ -322,7 +323,7 @@ public class FlightPlot {
             throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException,
             IllegalAccessException {
             //System.out.println("JDUAV is awesome");
-        SwingUtilities.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(new Runnable() { // 创建GUI事件分发线程
             @Override
             public void run() {
                 if (OSValidator.isMac()) {
@@ -633,8 +634,8 @@ public class FlightPlot {
     }
 
     private void createMenuBar() {
-        // File menu
-        JMenu fileMenu = new JMenu("File");
+        // File menu 文件菜单
+        JMenu fileMenu = new JMenu("文件");
 
         JMenuItem fileOpenItem = new JMenuItem("Open Log...");
         fileOpenItem.addActionListener(new ActionListener() {
@@ -750,16 +751,16 @@ public class FlightPlot {
             rangeOld = getLogRange(timeModeOld);
         }
 
-        ValueAxis domainAxis = selectDomainAxis(timeMode);
+        ValueAxis domainAxis = selectDomainAxis(timeMode); // 根据timeMode选择主轴
         // Set axis type according to selected time mode
         chart.getXYPlot().setDomainAxis(0, domainAxis, false);
 
-        if (domainAxis == domainAxisDate) {
+        if (domainAxis == domainAxisDate) { //主轴为日期
             // DateAxis uses ms instead of seconds
             domainAxis.setRange(new Range(rangeOld.getLowerBound() * 1e3 + timeOffset * 1e-3,
                     rangeOld.getUpperBound() * 1e3 + timeOffset * 1e-3), true, false);
             domainAxis.setDefaultAutoRange(new Range(logStart * 1e-3, (logStart + logSize) * 1e-3));
-        } else {
+        } else { // 主轴为秒数
             domainAxis.setRange(new Range(rangeOld.getLowerBound() + timeOffset * 1e-6,
                     rangeOld.getUpperBound() + timeOffset * 1e-6), true, false);
             domainAxis.setDefaultAutoRange(new Range(logStart * 1e-6, (logStart + logSize) * 1e-6));
@@ -768,6 +769,7 @@ public class FlightPlot {
 
     /**
      * Displayed log range in seconds of native log time
+     * 显示日志的范围，以秒为单位
      *
      * @param tm time mode
      * @return displayed log range [s]
@@ -1035,9 +1037,9 @@ public class FlightPlot {
 
     private ValueAxis selectDomainAxis(int tm) {
         if (tm == TIME_MODE_GPS) {
-            return domainAxisDate;
+            return domainAxisDate; // TimeMode为GPS的话，横轴显示日期
         } else {
-            return domainAxisSeconds;
+            return domainAxisSeconds; // 否则横轴显示秒数
         }
     }
 

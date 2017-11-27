@@ -2,8 +2,13 @@ package me.drton.jmavlib.log.px4;
 
 import me.drton.jmavlib.log.BinaryLogReader;
 import me.drton.jmavlib.log.FormatErrorException;
+import me.drton.jmavlib.log.LogReader; // jxf adds
+import me.drton.jmavlib.log.ulog.ULogReader; // jxf adds
 
+import javax.swing.*; // jxf adds
+import javax.swing.filechooser.FileSystemView; // jxf adds
 import java.io.EOFException;
+import java.io.File; // jxf adds
 import java.io.IOException;
 import java.util.*;
 
@@ -468,9 +473,46 @@ public class PX4LogReader extends BinaryLogReader {
         errors.clear();
     }
 
+/*    public static LogReader openDialog()
+    {
+        JFileChooser openLogFileChooser =  new JFileChooser(); // 默认路径，Windows为My Documents，Unix为home
+        FileSystemView fsv = FileSystemView.getFileSystemView();
+        File homeFile =fsv.getHomeDirectory();    //这便是读取桌面路径的方法了
+        openLogFileChooser.setCurrentDirectory(homeFile); // 默认路径改为桌面
+
+        int returnVal = openLogFileChooser.showDialog(new JFrame(""), "open"); // JFrame:扩展java.awt.Frame的外部窗体
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = openLogFileChooser.getSelectedFile(); // 选中文件
+            String logFileName = file.getPath();
+
+            String logFileNameLower = logFileName.toLowerCase();
+            LogReader logReaderNew;
+
+            try {
+                if (logFileNameLower.endsWith(".bin") || logFileNameLower.endsWith(".px4log")) {
+                    logReaderNew = new PX4LogReader(logFileName);
+                } else if (logFileNameLower.endsWith(".ulg")) {
+                    logReaderNew = new ULogReader(logFileName);
+                } else {
+                    //   setStatus("Log format not supported: " + logFileName);
+                    System.out.println("Log format not supported: " + logFileName);
+                    return  null;
+                }
+            } catch (Exception e) {
+                // setStatus("Error: " + e);
+                e.printStackTrace();
+                return null;
+            }
+            return logReaderNew;
+        }
+        return null;
+    }*/
+
     public static void main(String[] args) throws Exception {
         PX4LogReader reader = new PX4LogReader("test.bin");
-        //PX4LogReader reader = new PX4LogReader("16_50_24.px4log");
+        /*LogReader readlog = PX4LogReader.openDialog();
+        PX4LogReader reader = (PX4LogReader)readlog;*/
+
         long tStart = System.currentTimeMillis();
         while (true) {
             try {
