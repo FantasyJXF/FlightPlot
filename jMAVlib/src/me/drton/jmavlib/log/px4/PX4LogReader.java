@@ -473,7 +473,7 @@ public class PX4LogReader extends BinaryLogReader {
         errors.clear();
     }
 
-/*    public static LogReader openDialog()
+    public static LogReader openDialog()
     {
         JFileChooser openLogFileChooser =  new JFileChooser(); // 默认路径，Windows为My Documents，Unix为home
         FileSystemView fsv = FileSystemView.getFileSystemView();
@@ -506,12 +506,12 @@ public class PX4LogReader extends BinaryLogReader {
             return logReaderNew;
         }
         return null;
-    }*/
+    }
 
     public static void main(String[] args) throws Exception {
-        PX4LogReader reader = new PX4LogReader("test.bin");
-        /*LogReader readlog = PX4LogReader.openDialog();
-        PX4LogReader reader = (PX4LogReader)readlog;*/
+        //PX4LogReader reader = new PX4LogReader("test.bin");
+        LogReader readlog = PX4LogReader.openDialog();
+        PX4LogReader reader = (PX4LogReader)readlog;
 
         long tStart = System.currentTimeMillis();
         while (true) {
