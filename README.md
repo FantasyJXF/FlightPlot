@@ -16,7 +16,7 @@ Requirements:
 
 Clone repository:
 ```
-https://github.com/DrTon/FlightPlot.git
+https://github.com/FantasyJXF/FlightPlot.git
 ```
 
 Compile:
@@ -56,9 +56,9 @@ Requirements:
  -  Java 6 or newer (JDK, http://www.oracle.com/technetwork/java/javase/downloads/index.html)
  -  ant
 
-Clone repository (`--recursive` flag is required to pull in [jMAVlib](https://github.com/DrTon/jMAVlib)):
+Clone repository
 ```
-git clone --recursive https://github.com/DrTon/FlightPlot.git
+git clone https://github.com/FantasyJXF/FlightPlot.git
 ```
 
 Build:
@@ -83,3 +83,7 @@ Developing
 ----------
 
 IntelliJ IDEA IDE was used to develop FlightPlot, project files already exist in repo.
+
+需要注意的是，直接使用IDEA打开FlightPlot.ipr文件时PX4LogReader.java能单独运行。
+
+通过项目导入的方式则不行。
