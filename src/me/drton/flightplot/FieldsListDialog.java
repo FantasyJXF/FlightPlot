@@ -15,7 +15,7 @@ public class FieldsListDialog extends JDialog {
     public FieldsListDialog(final Runnable callbackAdd) {
         setContentPane(contentPane);
         setModal(true);
-        setTitle("Fields List");
+        setTitle("字段列表");
         getRootPane().setDefaultButton(buttonAdd);
         buttonAdd.addActionListener(new ActionListener() {
             @Override
@@ -47,12 +47,12 @@ public class FieldsListDialog extends JDialog {
         setVisible(false);
     }
 
-    public void setFieldsList(Map<String, String> fields) {
+    public void setFieldsList(Map<String, String> fields) { // 设置字段列表，键
         while (fieldsTableModel.getRowCount() > 0) {
             fieldsTableModel.removeRow(0);
         }
-        List<String> fieldsList = new ArrayList<String>(fields.keySet());
-        Collections.sort(fieldsList);
+        List<String> fieldsList = new ArrayList<String>(fields.keySet()); // 设置键
+        Collections.sort(fieldsList); // 键的大小排序
         for (String field : fieldsList) {
             fieldsTableModel.addRow(new Object[]{field, fields.get(field)});
         }
@@ -61,7 +61,7 @@ public class FieldsListDialog extends JDialog {
     public List<String> getSelectedFields() {
         List<String> selectedFields = new ArrayList<String>();
         for (int i : fieldsTable.getSelectedRows()) {
-            selectedFields.add((String) fieldsTableModel.getValueAt(i, 0));
+            selectedFields.add((String) fieldsTableModel.getValueAt(i, 0)); // 选中的行/字段
         }
         return selectedFields;
     }
@@ -74,8 +74,8 @@ public class FieldsListDialog extends JDialog {
                 return false;
             }
         };
-        fieldsTableModel.addColumn("Field");
-        fieldsTableModel.addColumn("Type");
+        fieldsTableModel.addColumn("字段");
+        fieldsTableModel.addColumn("数据类型");
         fieldsTable = new JTable(fieldsTableModel);
     }
 }

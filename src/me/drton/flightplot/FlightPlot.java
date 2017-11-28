@@ -161,19 +161,19 @@ public class FlightPlot {
         });
 
         createMenuBar(); // 创建菜单栏
-        java.util.List<String> processors = new ArrayList<String>(processorsTypesList.getProcessorsList()); // List是有序数据集
-        Collections.sort(processors); // collection是一个包装类。它包含有各种有关集合操作的静态多态方法
-        addProcessorDialog = new AddProcessorDialog(processors.toArray(new String[processors.size()]));
-        addProcessorDialog.pack();
-        fieldsListDialog = new FieldsListDialog(new Runnable() {
+        java.util.List<String> processors = new ArrayList<String>(processorsTypesList.getProcessorsList()); // List是有序数据集，getProcessorsList()方法返回HashMap中的键
+        Collections.sort(processors); // 对键排序
+        addProcessorDialog = new AddProcessorDialog(processors.toArray(new String[processors.size()])); // 添加Processor数据处理对话框
+        addProcessorDialog.pack(); // 窗口大小自适应
+        fieldsListDialog = new FieldsListDialog(new Runnable() { // 添加Fields字段列表对话框
             @Override
             public void run() {
-                StringBuilder fieldsValue = new StringBuilder();
-                for (String field : fieldsListDialog.getSelectedFields()) {
+                StringBuilder fieldsValue = new StringBuilder(); //StringBuilder类可以修改字符串而不创建新的对象
+                for (String field : fieldsListDialog.getSelectedFields()) {  // 得到选中的字段
                     if (fieldsValue.length() > 0) {
-                        fieldsValue.append(" ");
+                        fieldsValue.append(" ");//以空格隔开
                     }
-                    fieldsValue.append(field);
+                    fieldsValue.append(field); // 将此field添加fieldsValue中
                 }
                 PlotProcessor processor = new Simple();
                 processor.setParameters(Collections.<String, Object>singletonMap("Fields", fieldsValue.toString()));
@@ -186,7 +186,7 @@ public class FlightPlot {
                 processorsList.repaint();
                 updateUsedColors();
                 showAddProcessorDialog(true);
-                processFile();
+                processFile(); //文件处理
             }
         });
         logInfo = new LogInfo();
@@ -1067,13 +1067,13 @@ public class FlightPlot {
         // Displayed log range in seconds of native log time
         Range range = getLogRange(timeMode);
 
-        // Process some extra data in hidden areas
+        // Process some extra data in hidden areas 处理隐藏区域的一些额外数据
         long timeStart = (long) ((range.getLowerBound() - range.getLength()) * 1e6);
         long timeStop = (long) ((range.getUpperBound() + range.getLength()) * 1e6);
         timeStart = Math.max(logReader.getStartMicroseconds(), timeStart);
         timeStop = Math.min(logReader.getStartMicroseconds() + logReader.getSizeMicroseconds(), timeStop);
 
-        double timeScale = (selectDomainAxis(timeMode) == domainAxisDate) ? 1000.0 : 1.0;
+        double timeScale = (selectDomainAxis(timeMode) == domainAxisDate) ? 1000.0 : 1.0; //选择时间缩放值
 
         int displayPixels = 2000;
         double skip = range.getLength() / displayPixels;
@@ -1081,9 +1081,9 @@ public class FlightPlot {
             for (int i = 0; i < activeProcessors.size(); i++) {
                 ProcessorPreset pp = activeProcessors.get(i);
                 PlotProcessor processor;
-                processor = processorsTypesList.getProcessorInstance(pp, skip, logReader.getFields());
-                processor.setFieldsList(logReader.getFields());
-                processors[i] = processor;
+                processor = processorsTypesList.getProcessorInstance(pp, skip, logReader.getFields()); // 获得处理器类型实例
+                processor.setFieldsList(logReader.getFields()); // 根据HashMap返回读取到的字段格式   PX4LogReader.readFormats()
+                processors[i] = processor; // 确定处理器类型
             }
             logReader.seek(timeStart);
             logReader.clearErrors();
@@ -1219,7 +1219,7 @@ public class FlightPlot {
             processorsListModel.addRow(new Object[]{true, processorPreset});
             processorsList.setRowSelectionInterval(i, i);
         }
-        updateUsedColors();
+        updateUsedColors(); // 更新颜色
         processFile();
     }
 

@@ -18,8 +18,8 @@ public abstract class PlotProcessor {
     protected Map<String, Object> parameters;
     protected Map<String, String> fieldsList = new HashMap<String, String>();
     private double skipOut = 0.0;
-    private List<PlotItem> seriesList = new ArrayList<PlotItem>();
-    private List<XYPoint> lastPoints = new ArrayList<XYPoint>();
+    private List<PlotItem> seriesList = new ArrayList<PlotItem>(); // 获取item的标题
+    private List<XYPoint> lastPoints = new ArrayList<XYPoint>(); // 获取点的坐标
 
     protected PlotProcessor() {
         this.parameters = getDefaultParameters();

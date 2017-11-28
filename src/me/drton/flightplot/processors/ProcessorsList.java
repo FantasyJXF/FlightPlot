@@ -36,11 +36,11 @@ public class ProcessorsList {
     }
 
     private void addProcessorClass(Class<? extends PlotProcessor> processorClass) {
-        processors.put(processorClass.getSimpleName(), processorClass);
+        processors.put(processorClass.getSimpleName(), processorClass); // put(K key, V value)
     }
 
     public Set<String> getProcessorsList() {
-        return processors.keySet();
+        return processors.keySet(); // 返回键值
     }
 
     public PlotProcessor getProcessorInstance(ProcessorPreset processorPreset, double skipOut, Map<String, String> fieldsList)

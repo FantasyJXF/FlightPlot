@@ -508,6 +508,7 @@ public class PX4LogReader extends BinaryLogReader {
         return null;
     }
 
+    //
     public static void main(String[] args) throws Exception {
         //PX4LogReader reader = new PX4LogReader("test.bin");
         LogReader readlog = PX4LogReader.openDialog();

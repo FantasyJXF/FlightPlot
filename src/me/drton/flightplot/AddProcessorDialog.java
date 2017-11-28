@@ -59,7 +59,7 @@ public class AddProcessorDialog extends JDialog {
 
     public String getProcessorType() {
         return (String) processorTypesList.getSelectedValue();
-    }
+    } // 返回第一个返回的值，一个String
 
     public void display(Runnable callback, ProcessorPreset processorPreset) {
         if (processorTypesListModel.size() == 0) {

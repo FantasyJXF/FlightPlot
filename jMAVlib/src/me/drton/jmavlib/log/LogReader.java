@@ -22,6 +22,7 @@ public interface LogReader {
 
     /**
      * Read next update from the log and put it to 'update' map, unused keys will be not deleted.
+     * 从日志中读取下一个更新并放入待更新的map中，未使用的键key将被删除
      *
      * @param update map to store update
      * @return time of update in us
@@ -32,6 +33,7 @@ public interface LogReader {
 
     /**
      * Get map of field - format.
+     * 获得字段/数据类型的映射
      *
      * @return map of fields - formats
      */
