@@ -178,13 +178,13 @@ public class FlightPlot {
                 PlotProcessor processor = new Simple();
                 processor.setParameters(Collections.<String, Object>singletonMap("Fields", fieldsValue.toString()));
                 ProcessorPreset pp = new ProcessorPreset("New", processor.getProcessorType(),
-                        processor.getParameters(), Collections.<String, Color>emptyMap());
+                        processor.getParameters(), Collections.<String, Color>emptyMap());  // 获得数据预处理类型
                 updatePresetParameters(pp, null);
                 int i = processorsListModel.getRowCount();
                 processorsListModel.addRow(new Object[]{true, pp});
                 processorsList.getSelectionModel().setSelectionInterval(i, i);
                 processorsList.repaint();
-                updateUsedColors();
+                updateUsedColors(); // 更新使用过的颜色
                 showAddProcessorDialog(true);
                 processFile(); //文件处理
             }
@@ -536,7 +536,7 @@ public class FlightPlot {
     }
 
     private void createUIComponents() throws IllegalAccessException, InstantiationException {
-        // Chart panel
+        // Chart panel  图表面板
         processorsTypesList = new ProcessorsList();
         dataset = new XYSeriesCollection();
         colorSupplier = new ColorSupplier();
@@ -599,6 +599,7 @@ public class FlightPlot {
         });
 
         // Processors list
+        // 处理器列表
         processorsListModel = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int col) {
@@ -616,6 +617,7 @@ public class FlightPlot {
         processorsList.getColumnModel().getColumn(0).setMinWidth(20);
         processorsList.getColumnModel().getColumn(0).setMaxWidth(20);
         // Parameters table
+        // 参数表
         parametersTableModel = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int col) {
@@ -730,7 +732,7 @@ public class FlightPlot {
         mainFrame.setJMenuBar(menuBar);
     }
 
-    private void onTimeModeChanged() {
+    private void onTimeModeChanged() { // 改变时间模式
         int timeModeOld = timeMode;
         for (int i = 0; i < timeModeItems.length; i++) {
             if (timeModeItems[i].isSelected()) {
@@ -1229,6 +1231,7 @@ public class FlightPlot {
             processorPreset.getParameters().putAll(parametersUpdate);
         }
         // Construct and initialize processor to cleanup parameters list and get list of series
+        // 构造并初始化
         PlotProcessor p;
         try {
             p = processorsTypesList.getProcessorInstance(processorPreset, 0.0, null);

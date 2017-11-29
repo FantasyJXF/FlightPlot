@@ -35,12 +35,12 @@ public abstract class PlotProcessor {
         this.fieldsList = fieldsList;
     }
 
-    private static Object castValue(Object valueOld, Object valueNewObj) {
+    private static Object castValue(Object valueOld, Object valueNewObj) { // 强制格式转换，确保新值数据类型与旧值一致
         String valueNewStr = valueNewObj.toString();
         Object valueNew = valueNewObj;
-        if (valueOld instanceof String) {
+        if (valueOld instanceof String) { // 如果旧值是String
             valueNew = valueNewStr;
-        } else if (valueOld instanceof Double) {
+        } else if (valueOld instanceof Double) { // 如果旧值是Double
             valueNew = Double.parseDouble(valueNewStr);
         } else if (valueOld instanceof Float) {
             valueNew = Float.parseFloat(valueNewStr);
@@ -61,11 +61,11 @@ public abstract class PlotProcessor {
     public abstract Map<String, Object> getDefaultParameters();
 
     public Map<String, Object> getParameters() {
-        return parameters;
+        return parameters; // 返回键值对
     }
 
     public void setParameters(Map<String, Object> parametersNew) {
-        for (Map.Entry<String, Object> entry : parametersNew.entrySet()) {
+        for (Map.Entry<String, Object> entry : parametersNew.entrySet()) { // entrySet()是键值对key-value的集合
             String key = entry.getKey();
             Object oldValue = parameters.get(key);
             Object newValue = parametersNew.get(key);

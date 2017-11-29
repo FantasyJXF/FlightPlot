@@ -31,7 +31,7 @@ public class Series extends ArrayList<XYPoint> implements PlotItem {
             return;
         }
         if (lastValue != null && lastTime != null && time - lastTime > skipOut * 2) {
-            add(new XYPoint(lastTime, lastValue));
+            add(new XYPoint(lastTime, lastValue)); // (时间,值)
         }
         lastTime = time;
         lastValue = null;

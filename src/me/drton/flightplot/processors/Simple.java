@@ -39,7 +39,7 @@ public class Simple extends PlotProcessor {
         highPassFilters = new HighPassFilter[param_Fields.length];
         for (int i = 0; i < param_Fields.length; i++) {
             LowPassFilter lowPassFilter = new LowPassFilter();
-            lowPassFilter.setF((Double) parameters.get("LPF"));
+            lowPassFilter.setF((Double) parameters.get("LPF"));// 低通滤波器频率
             lowPassFilters[i] = lowPassFilter;
             HighPassFilter highPassFilter = new HighPassFilter();
             highPassFilter.setF((Double) parameters.get("HPF"));
@@ -50,10 +50,12 @@ public class Simple extends PlotProcessor {
         }
     }
 
+    // 处理前的数
     protected double preProcessValue(int idx, double time, double in) {
         return in;
     }
 
+    // 处理后的数
     protected double postProcessValue(int idx, double time, double in) {
         return in;
     }
@@ -64,14 +66,14 @@ public class Simple extends PlotProcessor {
             String field = param_Fields[i];
             Object v = update.get(field);
             if (v != null && v instanceof Number) {
-                double out = preProcessValue(i, time, ((Number) v).doubleValue());
+                double out = preProcessValue(i, time, ((Number) v).doubleValue()); // 返回double型数据
                 if (Double.isNaN(out)) {
-                    addPoint(i, time, Double.NaN);
+                    addPoint(i, time, Double.NaN); // 为NAN
                 } else {
                     out = lowPassFilters[i].getOutput(time, out);
                     out = highPassFilters[i].getOutput(time, out);
-                    out = postProcessValue(i, time, out);
-                    addPoint(i, time + param_Delay, out * param_Scale + param_Offset);
+                    out = postProcessValue(i, time, out); // 输出out
+                    addPoint(i, time + param_Delay, out * param_Scale + param_Offset); // 对特定的item添加点(time,out)
                 }
             }
         }
