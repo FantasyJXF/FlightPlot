@@ -7,9 +7,9 @@ import java.util.*;
 
 public class FieldsListDialog extends JDialog {
     private JPanel contentPane;
-    private JButton buttonAdd;
-    private JTable fieldsTable;
-    private JButton buttonClose;
+    private JButton buttonAdd; // Add按钮
+    private JTable fieldsTable; // 字段列表内容
+    private JButton buttonClose; // Close按钮
     private DefaultTableModel fieldsTableModel;
 
     public FieldsListDialog(final Runnable callbackAdd) {

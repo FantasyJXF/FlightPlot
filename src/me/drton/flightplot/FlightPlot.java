@@ -131,12 +131,12 @@ public class FlightPlot {
         }) {
             exporters.put(exporter.getName(), exporter);
         }
-        trackExportDialog = new TrackExportDialog(exporters);
-        plotExportDialog = new PlotExportDialog(this);
+        trackExportDialog = new TrackExportDialog(exporters); // 导出轨迹，KML
+        plotExportDialog = new PlotExportDialog(this); // 导出图片
 
         preferences = Preferences.userRoot().node(appName);
-        mainFrame = new JFrame(appNameAndVersion); // Swing UI组件，扩展java.awt.Frame的外部窗体
-        mainFrame.setContentPane(mainPanel);
+        mainFrame = new JFrame(appNameAndVersion); // 主面板。 FlightPlot 版本号等
+        mainFrame.setContentPane(mainPanel); // 主面板
         mainFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         mainFrame.addWindowListener(new WindowAdapter() {
@@ -165,18 +165,18 @@ public class FlightPlot {
         Collections.sort(processors); // 对键排序
         addProcessorDialog = new AddProcessorDialog(processors.toArray(new String[processors.size()])); // 添加Processor数据处理对话框
         addProcessorDialog.pack(); // 窗口大小自适应
-        fieldsListDialog = new FieldsListDialog(new Runnable() { // 添加Fields字段列表对话框
+        fieldsListDialog = new FieldsListDialog(new Runnable() { // 添加Fields Lists字段列表对话框
             @Override
             public void run() {
                 StringBuilder fieldsValue = new StringBuilder(); //StringBuilder类可以修改字符串而不创建新的对象
-                for (String field : fieldsListDialog.getSelectedFields()) {  // 得到选中的字段
-                    if (fieldsValue.length() > 0) {
+                for (String field : fieldsListDialog.getSelectedFields()) {  // 得到选中的行
+                    if (fieldsValue.length() > 0) { // 字符串长度 > 0，表示这一行有值
                         fieldsValue.append(" ");//以空格隔开
                     }
                     fieldsValue.append(field); // 将此field添加fieldsValue中
                 }
                 PlotProcessor processor = new Simple();
-                processor.setParameters(Collections.<String, Object>singletonMap("Fields", fieldsValue.toString()));
+                processor.setParameters(Collections.<String, Object>singletonMap("Fields", fieldsValue.toString())); // 获得新的键值对
                 ProcessorPreset pp = new ProcessorPreset("New", processor.getProcessorType(),
                         processor.getParameters(), Collections.<String, Color>emptyMap());  // 获得数据预处理类型
                 updatePresetParameters(pp, null);

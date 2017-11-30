@@ -16,7 +16,7 @@ import java.util.Map;
 public abstract class PlotProcessor {
     protected static final String WHITESPACE_RE = "[ \t]+";
     protected Map<String, Object> parameters;
-    protected Map<String, String> fieldsList = new HashMap<String, String>();
+    protected Map<String, String> fieldsList = new HashMap<String, String>(); // 获取fieldsList的键值对
     private double skipOut = 0.0;
     private List<PlotItem> seriesList = new ArrayList<PlotItem>(); // 获取item的标题
     private List<XYPoint> lastPoints = new ArrayList<XYPoint>(); // 获取点的坐标
