@@ -11,7 +11,7 @@ public class PX4LogMessageDescription {
     private static Charset charset = Charset.forName("latin1");
 
     static PX4LogMessageDescription FORMAT = new PX4LogMessageDescription(0x80, 89, "FMT", "BBnNZ",
-            new String[]{"Type", "Length", "Name", "Format", "Labels"});
+            new String[]{"Type", "Length", "Name", "Format", "Labels"}); // FMT的消息序号为0x80. log_format_s结构体长度为86，每条日志消息有三个字节的包头长度
 
     public final int type;
     public final int length;
@@ -31,7 +31,7 @@ public class PX4LogMessageDescription {
     private static String getString(ByteBuffer buffer, int len) {
         byte[] strBuf = new byte[len];
         buffer.get(strBuf);
-        String[] p = new String(strBuf, charset).split("\0");
+        String[] p = new String(strBuf, charset).split("\0"); // 字符串结束符
         return p.length > 0 ? p[0] : "";
     }
 
@@ -41,21 +41,21 @@ public class PX4LogMessageDescription {
         name = getString(buffer, 4);
         format = getString(buffer, 16);
         String fieldsStr = getString(buffer, 64);
-        fields = fieldsStr.length() > 0 ? fieldsStr.split(",") : new String[0];
+        fields = fieldsStr.length() > 0 ? fieldsStr.split(",") : new String[0]; // 取得结结构体中以逗号分隔的字段，放到String[] fields字符串数组中
         if (!"FMT".equals(name)) {    // Workaround for buggy and useless APM "FMT" format
             if (fields.length != format.length()) {
                 throw new RuntimeException(String.format("Labels count != format length: name = \"%s\" fields = %s, format = \"%s\"",
                         name, Arrays.asList(fields), format));
             }
             for (int i = 0; i < fields.length; i++) {
-                fieldsMap.put(fields[i], i);
+                fieldsMap.put(fields[i], i); // 将字符串数组中结构体成员名字放到fieldsMap这个HashMap中
             }
         }
     }
 
     public PX4LogMessage parseMessage(ByteBuffer buffer) {
         List<Object> data = new ArrayList<Object>(format.length());
-        for (char f : format.toCharArray()) {
+        for (char f : format.toCharArray()) { // 将字符串转换成字符数组
             Object v;
             if (f == 'f') {
                 v = buffer.getFloat();
@@ -92,9 +92,9 @@ public class PX4LogMessageDescription {
             } else {
                 throw new RuntimeException("Invalid format char in message " + name + ": " + f);
             }
-            data.add(v);// 放数据
+            data.add(v);// 讲解析得到的数据加入data中，data是各种消息的结构体成员数据
         }
-        return new PX4LogMessage(this, data);
+        return new PX4LogMessage(this, data); // 描述 + 数据 = 日志消息
     }
 
     public List<String> getFields() {

@@ -23,7 +23,7 @@ public class PX4LogReader extends BinaryLogReader {
     private long dataStart = 0;
     private boolean formatPX4 = false;
     private Map<Integer, PX4LogMessageDescription> messageDescriptions
-            = new HashMap<Integer, PX4LogMessageDescription>();
+            = new HashMap<Integer, PX4LogMessageDescription>(); // 建立了消息ID与消息描述之间的映射
     private Map<String, String> fieldsList = null;
     private long time = 0;
     private PX4LogMessage lastMsg = null;
@@ -125,6 +125,7 @@ public class PX4LogReader extends BinaryLogReader {
                 break;
             }
             // Time range
+            // 时间范围
             if (formatPX4) {
                 if ("TIME".equals(msg.description.name)) {
                     long t = msg.getLong(0);
@@ -146,6 +147,7 @@ public class PX4LogReader extends BinaryLogReader {
             packetsNum++;
 
             // Version
+            // 版本
             if (formatPX4) {
                 if ("VER".equals(msg.description.name)) {
                     String fw = (String) msg.get("FwGit");
@@ -172,6 +174,7 @@ public class PX4LogReader extends BinaryLogReader {
             }
 
             // Parameters
+            // 参数
             if ("PARM".equals(msg.description.name)) {
                 parameters.put((String) msg.get("Name"), msg.get("Value"));
             }
@@ -203,24 +206,25 @@ public class PX4LogReader extends BinaryLogReader {
                 }
             }
         }
-        startMicroseconds = timeStart;
+        startMicroseconds = timeStart; // 解锁时的时间
         sizeUpdates = packetsNum;
         sizeMicroseconds = timeEnd - timeStart;
         if (!formatPX4) {
             version.put("FW", versionStr.toString());
         }
-        seek(0);
+        seek(0);  // 开始记日志
     }
 
     @Override
     public boolean seek(long seekTime) throws IOException {
         position(dataStart);
         lastMsg = null;
-        if (seekTime == 0) {      // Seek to start of log
+        if (seekTime == 0) {      // Seek to start of log 开始记日志
             time = 0;
             return true;
         }
         // Seek to specified timestamp without parsing all messages
+        // 在不解析所有消息的情况下查找指定的时间戳
         try {
             while (true) {
                 long pos = position();
@@ -232,17 +236,18 @@ public class PX4LogReader extends BinaryLogReader {
                 }
                 int bodyLen = messageDescription.length - HEADER_LEN;
                 try {
-                    fillBuffer(bodyLen);
+                    fillBuffer(bodyLen); // 填充日志消息到缓存
                 } catch (EOFException e) {
                     errors.add(new FormatErrorException(pos, "Unexpected end of file"));
                     return false;
                 }
                 if (formatPX4) {
-                    if ("TIME".equals(messageDescription.name)) {
+                    if ("TIME".equals(messageDescription.name)) { // 首先提取出日志中的时间信息
                         PX4LogMessage msg = messageDescription.parseMessage(buffer);
                         long t = msg.getLong(0);
                         if (t > seekTime) {
                             // Time found
+                            // 找到了时间消息
                             time = t;
                             position(pos);
                             return true;
@@ -252,7 +257,7 @@ public class PX4LogReader extends BinaryLogReader {
                         buffer.position(buffer.position() + bodyLen);
                     }
                 } else {
-                    Integer idx = messageDescription.fieldsMap.get(tsName);
+/*                    Integer idx = messageDescription.fieldsMap.get(tsName);
                     if (idx != null && idx == 0) {
                         PX4LogMessage msg = messageDescription.parseMessage(buffer);
                         long t = msg.getLong(idx);
@@ -268,7 +273,7 @@ public class PX4LogReader extends BinaryLogReader {
                     } else {
                         // Skip the message
                         buffer.position(buffer.position() + bodyLen);
-                    }
+                    }*/
                 }
             }
         } catch (EOFException e) {
@@ -338,7 +343,7 @@ public class PX4LogReader extends BinaryLogReader {
                     break;
                 }
             } else {
-                // APM log doesn't have TIME message
+/*                // APM log doesn't have TIME message
                 long ts = getAPMTimestamp(msg);
                 if (ts > 0) {
                     time = ts;
@@ -352,7 +357,7 @@ public class PX4LogReader extends BinaryLogReader {
                             break;
                         }
                     }
-                }
+                }*/
             }
 
             applyMsg(update, msg);
@@ -366,40 +371,42 @@ public class PX4LogReader extends BinaryLogReader {
     }
 
     private void readFormats() throws IOException, FormatErrorException {
-        fieldsList = new HashMap<String, String>();
+        fieldsList = new HashMap<String, String>(); // fieldslist将具体的消息字段与其对应的数据类型配对
         try {
             while (true) {
                 if (fillBuffer() < 0) {
                     break;
                 }
                 while (true) {
-                    if (buffer.remaining() < PX4LogMessageDescription.FORMAT.length) {
+                    if (buffer.remaining() < PX4LogMessageDescription.FORMAT.length) { // 返回buffer剩余的可用长度
                         break;
                     }
-                    buffer.mark();
-                    int msgType = readHeader();     // Don't try to handle errors in formats
-                    if (msgType == PX4LogMessageDescription.FORMAT.type) {
+                    buffer.mark();// 在buffer的当前位置作标记
+                    int msgType = readHeader();     // Don't try to handle errors in formats 读取消息头并返回消息的ID
+                    if (msgType == PX4LogMessageDescription.FORMAT.type) { // 读到的是FMT消息格式数据
                         // Message description
-                        PX4LogMessageDescription msgDescr = new PX4LogMessageDescription(buffer);
-                        messageDescriptions.put(msgDescr.type, msgDescr);
+                        PX4LogMessageDescription msgDescr = new PX4LogMessageDescription(buffer); // 写入了每种消息的描述
+                        messageDescriptions.put(msgDescr.type, msgDescr); // 建立了消息ID与消息描述之间的映射
                         if ("TIME".equals(msgDescr.name)) {
                             formatPX4 = true;
                         }
                         if (!hideMsgs.contains(msgDescr.name)) {
-                            for (int i = 0; i < msgDescr.fields.length; i++) {
-                                String field = msgDescr.fields[i];
-                                String format = formatNames.get(Character.toString(msgDescr.format.charAt(i)));
+                            for (int i = 0; i < msgDescr.fields.length; i++) { // 一共有log_format个关注的日志消息
+                                String field = msgDescr.fields[i]; // 一个field对应一种日志消息
+                                String format = formatNames.get(Character.toString(msgDescr.format.charAt(i))); // 将format中的每一个字母缩写转换成具体的格式字符串  例如 b -> uint_8
                                 if (i != 0 || !("TimeMS".equals(field) || "TimeUS".equals(field))) {
-                                    fieldsList.put(msgDescr.name + "." + field, format);
+                                    fieldsList.put(msgDescr.name + "." + field, format);// 将字段名与其对应的数据类型对应起来，  例如： ATT.Pitch  对应 float
                                 }
                             }
                         }
                     } else {
                         // Data message
+                        // 数据消息
                         if (formatPX4) {
                             // If it's PX4 log then all formats are read
-                            buffer.reset();
-                            dataStart = position();
+                            // 所有的格式都已经读好了
+                            buffer.reset(); // 对应前面的 mark
+                            dataStart = position(); // 数据开始传输的位置
                             return;
                         } else {
                             // APM may have format messages in the middle of log
@@ -423,8 +430,8 @@ public class PX4LogReader extends BinaryLogReader {
         long syncErr = -1;
         while (true) {
             fillBuffer(3);
-            int p = buffer.position();
-            if (buffer.get() != HEADER_HEAD1 || buffer.get() != HEADER_HEAD2) {
+            int p = buffer.position(); // position指向ByteBuffer的第一个字节，每次调用.get()函数都会触发position++
+            if (buffer.get() != HEADER_HEAD1 || buffer.get() != HEADER_HEAD2) { // HEADER1 = 0xA3   HEADER2 = 0x95
                 buffer.position(p + 1);
                 if (syncErr < 0) {
                     syncErr = position() - 1;
@@ -440,6 +447,7 @@ public class PX4LogReader extends BinaryLogReader {
 
     /**
      * Read next message from log
+     * 从日志中读取下一条日志
      *
      * @return log message
      * @throws IOException  on IO error
@@ -447,20 +455,20 @@ public class PX4LogReader extends BinaryLogReader {
      */
     public PX4LogMessage readMessage() throws IOException {
         while (true) {
-            int msgType = readHeader();
+            int msgType = readHeader(); // 读取消息头  获得消息ID
             long pos = position();
-            PX4LogMessageDescription messageDescription = messageDescriptions.get(msgType);
+            PX4LogMessageDescription messageDescription = messageDescriptions.get(msgType); // 通过消息ID获取消息的描述：字段、数据类型、、、
             if (messageDescription == null) {
                 errors.add(new FormatErrorException(pos, "Unknown message type: " + msgType));
                 continue;
             }
             try {
-                fillBuffer(messageDescription.length - HEADER_LEN);
+                fillBuffer(messageDescription.length - HEADER_LEN); // 将一种消息的数据所占长度字符串写入buffer
             } catch (EOFException e) {
                 errors.add(new FormatErrorException(pos, "Unexpected end of file"));
                 throw e;
             }
-            return messageDescription.parseMessage(buffer);
+            return messageDescription.parseMessage(buffer); // 返回消息与数据
         }
     }
 
@@ -514,7 +522,7 @@ public class PX4LogReader extends BinaryLogReader {
         LogReader readlog = PX4LogReader.openDialog();
         PX4LogReader reader = (PX4LogReader)readlog;
 
-        long tStart = System.currentTimeMillis();
+           long tStart = System.currentTimeMillis();
         while (true) {
             try {
                 PX4LogMessage msg = reader.readMessage();
