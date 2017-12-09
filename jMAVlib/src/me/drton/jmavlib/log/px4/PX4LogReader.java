@@ -314,7 +314,7 @@ public class PX4LogReader extends BinaryLogReader {
                     continue;   // Don't apply timestamp field
                 }
             }
-            update.put(msg.description.name + "." + field, msg.get(i));
+            update.put(msg.description.name + "." + field, msg.get(i)); // 为每一条日志消息的结构体成员赋值
         }
     }
 
