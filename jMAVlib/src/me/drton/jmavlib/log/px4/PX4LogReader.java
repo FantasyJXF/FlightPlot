@@ -136,13 +136,13 @@ public class PX4LogReader extends BinaryLogReader {
                     timeEnd = t;
                 }
             } else {
-                long t = getAPMTimestamp(msg);
+/*                long t = getAPMTimestamp(msg);
                 if (t > 0) {
                     if (timeStart < 0) {
                         timeStart = t;
                     }
                     timeEnd = t;
-                }
+                }*/
             }
             packetsNum++;
 
@@ -160,7 +160,7 @@ public class PX4LogReader extends BinaryLogReader {
                     }
                 }
             } else {
-                if ("MSG".equals(msg.description.name)) {
+/*                if ("MSG".equals(msg.description.name)) {
                     String s = (String) msg.get("Message");
                     if (parseVersion && (s.startsWith("Ardu") || s.startsWith("PX4"))) {
                         if (versionStr.length() > 0) {
@@ -170,7 +170,7 @@ public class PX4LogReader extends BinaryLogReader {
                     } else {
                         parseVersion = false;
                     }
-                }
+                }*/
             }
 
             // Parameters
@@ -186,10 +186,10 @@ public class PX4LogReader extends BinaryLogReader {
                             int fix = ((Number) msg.get("Fix")).intValue();
                             long gpsT = ((Number) msg.get("GPSTime")).longValue();
                             if (fix >= 3 && gpsT > 0) {
-                                utcTimeReference = gpsT - timeEnd;
+                                utcTimeReference = gpsT - timeEnd; // 当GPS状态良好时获得UTC的时间参考
                             }
                         } else {
-                            int fix = ((Number) msg.get("Status")).intValue();
+/*                            int fix = ((Number) msg.get("Status")).intValue();
                             int week = ((Number) msg.get("Week")).intValue();
                             long ms = ((Number) msg.get(tsName)).longValue();
                             if (tsMicros) {
@@ -199,7 +199,7 @@ public class PX4LogReader extends BinaryLogReader {
                                 long leapSeconds = 16;
                                 long gpsT = ((315964800L + week * 7L * 24L * 3600L - leapSeconds) * 1000 + ms) * 1000L;
                                 utcTimeReference = gpsT - timeEnd;
-                            }
+                            }*/
                         }
                     } catch (Exception ignored) {
                     }
@@ -209,9 +209,9 @@ public class PX4LogReader extends BinaryLogReader {
         startMicroseconds = timeStart; // 解锁时的时间
         sizeUpdates = packetsNum;
         sizeMicroseconds = timeEnd - timeStart;
-        if (!formatPX4) {
+/*        if (!formatPX4) {
             version.put("FW", versionStr.toString());
-        }
+        }*/
         seek(0);  // 开始记日志
     }
 
@@ -409,7 +409,7 @@ public class PX4LogReader extends BinaryLogReader {
                             dataStart = position(); // 数据开始传输的位置
                             return;
                         } else {
-                            // APM may have format messages in the middle of log
+/*                            // APM may have format messages in the middle of log
                             // Skip the message
                             PX4LogMessageDescription messageDescription = messageDescriptions.get(msgType);
                             if (messageDescription == null) {
@@ -417,7 +417,7 @@ public class PX4LogReader extends BinaryLogReader {
                                 throw new RuntimeException("Unknown message type: " + msgType);
                             }
                             int bodyLen = messageDescription.length - HEADER_LEN;
-                            buffer.position(buffer.position() + bodyLen);
+                            buffer.position(buffer.position() + bodyLen);*/
                         }
                     }
                 }
@@ -456,7 +456,7 @@ public class PX4LogReader extends BinaryLogReader {
     public PX4LogMessage readMessage() throws IOException {
         while (true) {
             int msgType = readHeader(); // 读取消息头  获得消息ID
-            long pos = position();
+            long pos = position();// 当前位置
             PX4LogMessageDescription messageDescription = messageDescriptions.get(msgType); // 通过消息ID获取消息的描述：字段、数据类型、、、
             if (messageDescription == null) {
                 errors.add(new FormatErrorException(pos, "Unknown message type: " + msgType));
@@ -516,7 +516,7 @@ public class PX4LogReader extends BinaryLogReader {
         return null;
     }
 
-    //
+
     public static void main(String[] args) throws Exception {
         //PX4LogReader reader = new PX4LogReader("test.bin");
         LogReader readlog = PX4LogReader.openDialog();

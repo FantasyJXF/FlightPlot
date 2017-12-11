@@ -92,7 +92,7 @@ public class PX4LogMessageDescription {
             } else {
                 throw new RuntimeException("Invalid format char in message " + name + ": " + f);
             }
-            data.add(v);// 讲解析得到的数据加入data中，data是各种消息的结构体成员数据
+            data.add(v);// 将解析得到的数据加入data中，data是各种消息的结构体成员数据
         }
         return new PX4LogMessage(this, data); // 描述 + 数据 = 日志消息
     }
